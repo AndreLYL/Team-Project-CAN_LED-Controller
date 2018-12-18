@@ -2,8 +2,15 @@
 #include "variant.h"
 #include "due_can.h"
 
+#define NUM_LEDS 10
+char Color[5][3] = { {0, 255, 0},     //Green: Evething is fine
+                     {255, 0, 0},     //Red:   You should stop
+                     {0, 0, 255},     //Blue:  Someone in the overhead
+                     {255,255,0},     //Yellow:Take care       
+                     {0, 0, 0}       //OFF:           
+                    };
+
 CAN_FRAME myframe[3];
-//bool flag=1;
 
 void Frame_Init()
 {
@@ -51,10 +58,115 @@ void sendData(CAN_FRAME frame)
     Can0.sendFrame(outgoing);
 }
 
+void Application_Demo()
+{
+  /**********系统正常**********/
+  for(int j=0; j < 3; j++){
+  for(int i=0; i < 3; i++){
+    myframe[1].data.byte[i] = Color[0][i];
+  }
+  sendData(myframe[1]); 
+  myframe[2].data.byte[0] = 1;
+  sendData(myframe[2]); 
+  delay(1000);
+  delay(1000);
+  for(int i=0; i < 3; i++){
+    myframe[1].data.byte[i] = Color[4][i];
+  }
+  sendData(myframe[1]); 
+  myframe[2].data.byte[0] = 0;
+  sendData(myframe[2]); 
+  delay(1000);
+  delay(1000);
+  }
+  //延时
+  delay(1000);  delay(1000);  delay(1000);  delay(1000);
+  /*************系统故障****************/
+  for(int j=0; j < 10; j++){
+  for(int i=0; i < 3; i++){
+    myframe[1].data.byte[i] = Color[1][i];
+  }
+  sendData(myframe[1]); 
+  myframe[2].data.byte[0] = 1;
+  sendData(myframe[2]); 
+  delay(1000);
+  delay(1000);
+  for(int i=0; i < 3; i++){
+    myframe[1].data.byte[i] = Color[4][i];
+  }
+  sendData(myframe[1]); 
+  myframe[2].data.byte[0] = 0;
+  sendData(myframe[2]); 
+  delay(1000);
+  delay(1000);
+  }
+  //延时
+  delay(1000);  delay(1000);  delay(1000);  delay(1000);
+  /*************正常状态****************/
+  for(int i=0; i < 3; i++){
+    myframe[1].data.byte[i] = Color[0][i];
+  }
+  sendData(myframe[1]); 
+  myframe[2].data.byte[0] = 1;
+  sendData(myframe[2]); 
+  delay(1000);
+  delay(1000);
+
+  //延时
+  delay(1000);  delay(1000);  delay(1000);  delay(1000);
+  /*************左侧有障碍****************/
+    for(int i=0; i < NUM_LEDS/3; i++){
+    myframe[0].data.byte[0] = i;
+    myframe[0].data.byte[1] = Color[3][0];
+    myframe[0].data.byte[2] = Color[3][1];
+    myframe[0].data.byte[3] = Color[3][2]; 
+  }
+  sendData(myframe[1]); 
+  myframe[2].data.byte[0] = 1;
+  sendData(myframe[2]); 
+  delay(1000);
+  delay(1000);
+  
+  //延时
+  delay(1000);  delay(1000);  delay(1000);  delay(1000);
+  /*************右侧有障碍****************/
+  for(int i=0; i < NUM_LEDS/3; i++){
+    myframe[0].data.byte[0] = (NUM_LEDS/3*2)+i;
+    myframe[0].data.byte[1] = Color[3][0];
+    myframe[0].data.byte[2] = Color[3][1];
+    myframe[0].data.byte[3] = Color[3][2]; 
+  }
+  sendData(myframe[1]); 
+  myframe[2].data.byte[0] = 1;
+  sendData(myframe[2]); 
+  delay(1000);
+  delay(1000);
+  
+  //延时
+  delay(1000);  delay(1000);  delay(1000);  delay(1000);
+  /*************正前方有障碍****************/
+    for(int i=0; i < NUM_LEDS/3+1; i++){
+    myframe[0].data.byte[0] = (NUM_LEDS/3-1)+i;
+    myframe[0].data.byte[1] = Color[3][0];
+    myframe[0].data.byte[2] = Color[3][1];
+    myframe[0].data.byte[3] = Color[3][2]; 
+  }
+  sendData(myframe[1]); 
+  myframe[2].data.byte[0] = 1;
+  sendData(myframe[2]); 
+  delay(1000);
+  delay(1000);
+  
+  //延时
+  delay(1000);  delay(1000);  delay(1000);  delay(1000);
+}
+
+
 void loop() {
   // put your main code here, to run repeatedly:
   while(1)
   {
+    /*
     for(int g=0; g<2; g++)
     {
      sendData(myframe[g]); 
@@ -62,6 +174,9 @@ void loop() {
      sendData(myframe[2]); 
      delay(100);
     }
+    */
+
+    Application_Demo();
     delay(200);
   }
 }
