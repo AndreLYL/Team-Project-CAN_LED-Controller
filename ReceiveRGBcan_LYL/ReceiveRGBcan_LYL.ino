@@ -10,7 +10,7 @@
 CRGB leds [NUM_LEDS];
 CAN_FRAME incoming;
 
-int LedLeiste[NUM_LEDS][3]={0};
+char LedLeiste[NUM_LEDS][3]={0};
  
 void setup() {
   // put your setup code here, to run once:
@@ -29,9 +29,10 @@ void setup() {
     Serial.println("Program Started");
 
     /*************LED Power on Self-Test*******/
+    /*
     for(int k=0;k<NUM_LEDS;k++)
     {
-      leds[k]=CRGB(0,255,0);
+      leds[k]=CRGB(255,0,0);
       FastLED.show();
       delay(50);
      }
@@ -41,7 +42,7 @@ void setup() {
       FastLED.show();
       delay(50);
      }
-
+*/
   
 }
 //-----------------------------------------------
@@ -58,24 +59,15 @@ void setup() {
 
 void Message_Handling()
 {
-  /*  if(incoming.id == 0x10)
-  {
-      LedLeiste[incoming.data.byte[0]][0] = incoming.data.byte[1];
-      LedLeiste[incoming.data.byte[0]][1] = incoming.data.byte[2];
-      LedLeiste[incoming.data.byte[0]][2] = incoming.data.byte[3];
-      printData();
-   }  */
+
   switch (incoming.id)
   {
     case 0x10:
-    //case '0x10':
       LedLeiste[incoming.data.byte[0]][0] = incoming.data.byte[1];
       LedLeiste[incoming.data.byte[0]][1] = incoming.data.byte[2];
       LedLeiste[incoming.data.byte[0]][2] = incoming.data.byte[3];
-     // printData();
       break;
      case 0x11:
-    //case '0x11':
       for(int k=0;k<NUM_LEDS;k++)
       {
         LedLeiste[k][0]=incoming.data.byte[0];

@@ -3,8 +3,8 @@
 #include "due_can.h"
 
 #define NUM_LEDS 10
-char Color[5][3] = { {0, 255, 0},     //Green: Evething is fine
-                     {255, 0, 0},     //Red:   You should stop
+char Color[5][3] = { {255, 0, 0},     //Green: Evething is fine
+                     {0, 255, 0},     //Red:   You should stop
                      {0, 0, 255},     //Blue:  Someone in the overhead
                      {255,255,0},     //Yellow:Take care       
                      {0, 0, 0}       //OFF:           
@@ -60,7 +60,31 @@ void sendData(CAN_FRAME frame)
 
 void Application_Demo()
 {
-  /**********系统正常**********/
+  /**********系统启动**********/
+    for(int i=0;i<NUM_LEDS;i++)
+    {     
+      myframe[0].data.byte[0] = i;
+      myframe[0].data.byte[1] = Color[0][0];
+      myframe[0].data.byte[2] = Color[0][1];
+      myframe[0].data.byte[3] = Color[0][2]; 
+      sendData(myframe[0]);
+      myframe[2].data.byte[0] = 1;
+      sendData(myframe[2]); 
+      delay(50); 
+     }
+     for(int i=0;i<NUM_LEDS;i++)
+    {
+      myframe[0].data.byte[0] = i;
+      myframe[0].data.byte[1] = Color[4][0];
+      myframe[0].data.byte[2] = Color[4][1]; 
+      myframe[0].data.byte[3] = Color[4][2]; 
+      sendData(myframe[0]);
+      myframe[2].data.byte[0] = 1;
+      sendData(myframe[2]); 
+      delay(50);
+     }
+  delay(500);
+  delay(500);
   for(int j=0; j < 3; j++){
   for(int i=0; i < 3; i++){
     myframe[1].data.byte[i] = Color[0][i];
@@ -68,19 +92,18 @@ void Application_Demo()
   sendData(myframe[1]); 
   myframe[2].data.byte[0] = 1;
   sendData(myframe[2]); 
-  delay(1000);
-  delay(1000);
+  delay(500);
+  delay(500);
   for(int i=0; i < 3; i++){
     myframe[1].data.byte[i] = Color[4][i];
   }
   sendData(myframe[1]); 
-  myframe[2].data.byte[0] = 0;
+  myframe[2].data.byte[0] = 1;
   sendData(myframe[2]); 
-  delay(1000);
-  delay(1000);
+  delay(500);
+  delay(500);
   }
-  //延时
-  delay(1000);  delay(1000);  delay(1000);  delay(1000);
+
   /*************系统故障****************/
   for(int j=0; j < 10; j++){
   for(int i=0; i < 3; i++){
@@ -88,23 +111,25 @@ void Application_Demo()
   }
   sendData(myframe[1]); 
   myframe[2].data.byte[0] = 1;
+  for(int i=0; i < 3; i++){
+    myframe[1].data.byte[i] = Color[1][i];
+  }
   sendData(myframe[2]); 
-  delay(1000);
-  delay(1000);
+  delay(500);
+  delay(500);
   for(int i=0; i < 3; i++){
     myframe[1].data.byte[i] = Color[4][i];
   }
   sendData(myframe[1]); 
-  myframe[2].data.byte[0] = 0;
+  myframe[2].data.byte[0] = 1;
   sendData(myframe[2]); 
-  delay(1000);
-  delay(1000);
+  delay(500);
+  delay(500);
   }
-  //延时
-  delay(1000);  delay(1000);  delay(1000);  delay(1000);
-  /*************正常状态****************/
+
+  /*************正常待机状态****************/
   for(int i=0; i < 3; i++){
-    myframe[1].data.byte[i] = Color[0][i];
+    myframe[1].data.byte[i] = Color[2][i];
   }
   sendData(myframe[1]); 
   myframe[2].data.byte[0] = 1;
@@ -120,8 +145,9 @@ void Application_Demo()
     myframe[0].data.byte[1] = Color[3][0];
     myframe[0].data.byte[2] = Color[3][1];
     myframe[0].data.byte[3] = Color[3][2]; 
+    sendData(myframe[0]); 
   }
-  sendData(myframe[1]); 
+
   myframe[2].data.byte[0] = 1;
   sendData(myframe[2]); 
   delay(1000);
@@ -135,8 +161,9 @@ void Application_Demo()
     myframe[0].data.byte[1] = Color[3][0];
     myframe[0].data.byte[2] = Color[3][1];
     myframe[0].data.byte[3] = Color[3][2]; 
+    sendData(myframe[0]); 
   }
-  sendData(myframe[1]); 
+  
   myframe[2].data.byte[0] = 1;
   sendData(myframe[2]); 
   delay(1000);
@@ -146,12 +173,12 @@ void Application_Demo()
   delay(1000);  delay(1000);  delay(1000);  delay(1000);
   /*************正前方有障碍****************/
     for(int i=0; i < NUM_LEDS/3+1; i++){
-    myframe[0].data.byte[0] = (NUM_LEDS/3-1)+i;
+    myframe[0].data.byte[0] = (NUM_LEDS/3)+i;
     myframe[0].data.byte[1] = Color[3][0];
     myframe[0].data.byte[2] = Color[3][1];
     myframe[0].data.byte[3] = Color[3][2]; 
+    sendData(myframe[0]); 
   }
-  sendData(myframe[1]); 
   myframe[2].data.byte[0] = 1;
   sendData(myframe[2]); 
   delay(1000);
